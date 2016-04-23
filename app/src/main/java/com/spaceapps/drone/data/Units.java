@@ -1,4 +1,4 @@
-package practice.com.drone.data;
+package com.spaceapps.drone.data;
 
 import org.json.JSONObject;
 

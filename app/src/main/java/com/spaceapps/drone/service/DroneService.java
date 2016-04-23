@@ -1,7 +1,8 @@
-package practice.com.drone.service;
+package com.spaceapps.drone.service;
 
-import android.net.Uri;
 import android.os.AsyncTask;
+
+import com.spaceapps.drone.data.Drone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,27 +13,24 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import practice.com.drone.data.Channel;
-
 /**
  * Created by Karen on 22-Apr-16.
  */
-public class YahooWeatherService {
-    private WeatherServiceCallback callback;
-    private String location;
+public class DroneService {
+    private DroneCallback callback;
+    private String id;
     private Exception error;
 
-    public YahooWeatherService(WeatherServiceCallback callback) {
+    public DroneService(DroneCallback callback) {
         this.callback = callback;
     }
 
-    public void refreshWeather(String l){
-        this.location = l;
+    public void refreshLocation(String droneId){
+        this.id=droneId;
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... strings) {
-                String YQL = String.format("select * from weather.forecast where woeid in (SELECT woeid FROM geo.places WHERE text=\"(%s)\") and u='c'", strings[0]);
-                String endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
+                String endpoint = String.format("http://52.20.132.108:3000/getPos/%s", strings[0]);
 
                 try {
                     URL url = new URL(endpoint);
@@ -56,34 +54,21 @@ public class YahooWeatherService {
             protected void onPostExecute(String s) {
 
                 if(s==null && error!=null){
-                    callback.weatherServiceFailure(error);
+                    callback.droneServiceFailure(error);
                     return;
                 }
 
                 try {
                     JSONObject data = new JSONObject(s);
 
-                    JSONObject queryResults = data.optJSONObject("query");
-                    int count = queryResults.optInt("count");
-                    if(count==0){
-                        callback.weatherServiceFailure(new LocationWeatherException("No weather information found for" + location));
-                        return;
-                    }
+                    Drone drone = new Drone();
+                    drone.populate(data);
+                    callback.droneServiceSuccess(drone);
 
-                    Channel channel = new Channel();
-                    channel.populate(queryResults.optJSONObject("results").optJSONObject("channel"));
-
-                    callback.weatherServiceSuccess(channel);
                 } catch (JSONException e) {
-                    callback.weatherServiceFailure(e);
+                    callback.droneServiceFailure(e);
                 }
             }
-        }.execute(location);
-    }
-
-    public class LocationWeatherException extends Exception{
-        public LocationWeatherException(String detailMessage) {
-            super(detailMessage);
-        }
+        }.execute(droneId);
     }
 }

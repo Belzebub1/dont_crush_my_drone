@@ -1,4 +1,4 @@
-package practice.com.drone;
+package com.spaceapps.drone;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -9,7 +9,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,17 +19,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.spaceapps.drone.data.Channel;
+import com.spaceapps.drone.data.Drone;
+import com.spaceapps.drone.data.Item;
+import com.spaceapps.drone.service.DroneCallback;
+import com.spaceapps.drone.service.DroneService;
+import com.spaceapps.drone.service.WeatherServiceCallback;
+import com.spaceapps.drone.service.YahooWeatherService;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import practice.com.drone.data.Channel;
-import practice.com.drone.data.Drone;
-import practice.com.drone.data.Item;
-import practice.com.drone.service.DroneCallback;
-import practice.com.drone.service.DroneService;
-import practice.com.drone.service.WeatherServiceCallback;
-import practice.com.drone.service.YahooWeatherService;
+import practice.com.drone.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, WeatherServiceCallback, DroneCallback {
 
@@ -143,7 +143,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .rotation((float) drone.getHeading()));
                 initialPos = dronePos;
             }
-            Log.e("newLoc", dronePos + "");
         }
     }
 

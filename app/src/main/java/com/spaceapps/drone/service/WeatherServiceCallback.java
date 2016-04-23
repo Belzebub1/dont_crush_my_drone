@@ -1,6 +1,6 @@
-package practice.com.drone.service;
+package com.spaceapps.drone.service;
 
-import practice.com.drone.data.Channel;
+import com.spaceapps.drone.data.Channel;
 
 /**
  * Created by Karen on 22-Apr-16.
